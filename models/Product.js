@@ -15,11 +15,9 @@ class Product {
 
     try {
       const products = await db.collection(COLLECTION_NAME).find({}).toArray();
-
       return products;
     } catch (error) {
       console.error('Error occurred while searching for all products');
-
       return [];
     }
   }
@@ -45,7 +43,6 @@ class Product {
       return searchedProduct;
     } catch (error) {
       console.error('Error occurred while searching product');
-
       return null;
     }
   }
@@ -76,8 +73,9 @@ class Product {
       return lastAddedProduct;
     } catch (error) {
       console.error('Error occurred while searching for last product');
-
       return null;
     }
   }
 }
+
+module.exports = Product;
