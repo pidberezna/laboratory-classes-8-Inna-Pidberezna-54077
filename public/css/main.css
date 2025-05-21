@@ -172,12 +172,12 @@ main {
   color: #2c3e50;
 }
 
-.card_description {
+.card__description {
   color: #666;
   margin-bottom: 1rem;
 }
 
-.card_price {
+.card__price {
   font-size: 1.2rem;
   font-weight: 700;
   color: #4caf50;
