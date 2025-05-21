@@ -1,7 +1,6 @@
-const Product = require("./Product");
-const { getDatabase } = require("../database");
+const { getDatabase } = require('../database');
 
-const COLLECTION_NAME = "carts";
+const COLLECTION_NAME = 'carts';
 
 class Cart {
   constructor() {}
@@ -19,25 +18,23 @@ class Cart {
 
       return cart;
     } catch (error) {
-      console.error("Error occurred while searching cart");
+      console.error('Error occurred while searching cart');
 
       return { items: [] };
     }
   }
 
-  static async add(productName) {
+  static async add(product) {
     const db = getDatabase();
 
     try {
-      const product = await Product.findByName(productName);
-
-      if (!product) {
-        throw Error(`Product '${productName}' not found`);
+      if (!product || !product.name) {
+        throw Error(`Invalid product data`);
       }
 
       const cart = await this.getCart();
       const searchedProduct = cart.items.find(
-        (item) => item.product.name === productName
+        (item) => item.product.name === product.name
       );
 
       if (searchedProduct) {
@@ -50,7 +47,24 @@ class Cart {
         .collection(COLLECTION_NAME)
         .updateOne({}, { $set: { items: cart.items } });
     } catch (error) {
-      console.error("Error occurred while adding product to cart");
+      console.error('Error occurred while adding product to cart');
+    }
+  }
+
+  static async deleteProductByName(name) {
+    const db = getDatabase();
+
+    try {
+      const cart = await this.getCart();
+      const updatedItems = cart.items.filter(
+        (item) => item.product.name !== name
+      );
+
+      await db
+        .collection(COLLECTION_NAME)
+        .updateOne({}, { $set: { items: updatedItems } });
+    } catch (error) {
+      console.error('Error occurred while deleting product from cart');
     }
   }
 
@@ -60,7 +74,7 @@ class Cart {
 
       return cart.items;
     } catch (error) {
-      console.error("Error occurred while searching for products in cart");
+      console.error('Error occurred while searching for products in cart');
 
       return [];
     }
@@ -76,7 +90,7 @@ class Cart {
 
       return productsQuantity;
     } catch (error) {
-      console.error("Error occurred while getting quantity of items in cart");
+      console.error('Error occurred while getting quantity of items in cart');
 
       return 0;
     }
@@ -95,7 +109,7 @@ class Cart {
       return totalPrice;
     } catch (error) {
       console.error(
-        "Error occurred while calcualting total price of items in cart"
+        'Error occurred while calcualting total price of items in cart'
       );
 
       return 0;
@@ -110,7 +124,7 @@ class Cart {
         .collection(COLLECTION_NAME)
         .updateOne({}, { $set: { items: [] } });
     } catch (error) {
-      console.error("Error occurred while clearing cart");
+      console.error('Error occurred while clearing cart');
     }
   }
 }

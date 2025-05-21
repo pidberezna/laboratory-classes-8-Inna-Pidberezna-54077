@@ -1,6 +1,7 @@
-const { getDatabase } = require("../database");
+const { getDatabase } = require('../database');
+const Cart = require('./Cart');
 
-const COLLECTION_NAME = "products";
+const COLLECTION_NAME = 'products';
 
 class Product {
   constructor(name, description, price) {
@@ -17,7 +18,7 @@ class Product {
 
       return products;
     } catch (error) {
-      console.error("Error occurred while searching for all products");
+      console.error('Error occurred while searching for all products');
 
       return [];
     }
@@ -29,7 +30,7 @@ class Product {
     try {
       await db.collection(COLLECTION_NAME).insertOne(product);
     } catch (error) {
-      console.error("Error occurred while adding product");
+      console.error('Error occurred while adding product');
     }
   }
 
@@ -43,7 +44,7 @@ class Product {
 
       return searchedProduct;
     } catch (error) {
-      console.error("Error occurred while searching product");
+      console.error('Error occurred while searching product');
 
       return null;
     }
@@ -54,8 +55,9 @@ class Product {
 
     try {
       await db.collection(COLLECTION_NAME).deleteOne({ name });
+      await Cart.deleteProductByName(name);
     } catch (error) {
-      console.error("Error occurred while deleting product");
+      console.error('Error occurred while deleting product');
     }
   }
 
@@ -73,11 +75,9 @@ class Product {
 
       return lastAddedProduct;
     } catch (error) {
-      console.error("Error occurred while searching for last product");
+      console.error('Error occurred while searching for last product');
 
       return null;
     }
   }
 }
-
-module.exports = Product;
